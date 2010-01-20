@@ -1,0 +1,23 @@
+<div class="contextual">
+<!--% if authorize_for('issue_relations', 'new') %-->
+    <%= toggle_link l(:button_add), 'new-cclist-form'%>
+<!--% end %-->
+</div>
+<p><strong>CC List</strong></p>
+
+<% @cclist.each do |ccentry| %>
+  <p>
+  <%= ccentry.email %>
+  <%= link_to_remote(image_tag('delete.png'), { :url => {:controller => 'cclist', :action => 'destroy', :issue_id => @issue, :id => ccentry},                                              
+                                                  :method => :post
+                                                }, :title => l(:label_relation_delete))  %>
+  </p>
+<% end %>
+
+<% remote_form_for(:cc, @cc, 
+                 :url => {:controller => 'cclist', :action => 'add', :issue_id => @issue},
+                 :method => :post,
+                 :html => {:id => 'new-cclist-form', :style => (@cc ? '' : 'display: none;') }) do |f| %>
+<%= render :partial => 'cclist/form', :locals => {:f => f}%>
+<% end %>
+

@@ -1,0 +1,5 @@
+Special thanks to:
+
+*  Joe Anthony at Buzz Media who asked me to do all this work and put up with my complaints.
+*  Emmanuel Bretelle who, as of this writing, has no idea who I am, but wrote the Newissuealerts
+	which was the first place that I looked.

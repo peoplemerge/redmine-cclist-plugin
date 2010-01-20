@@ -1,0 +1,7 @@
+<%= "#{issue.tracker.name} ##{issue.id}: #{issue.subject}" %>
+<%= issue_url %>
+
+<% issue.custom_values.each do |c| %><%= c.custom_field.name %>: <%= show_value(c) %>
+<% end %>
+
+<%= issue.description %>

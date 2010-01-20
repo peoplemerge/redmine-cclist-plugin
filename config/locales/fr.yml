@@ -1,0 +1,4 @@
+# English strings go here for Rails i18n
+fr:
+  cclist_footer: Merci d'avoir contacté le service d'aide.  Un ticket a été cré pour suivre votre problème.
+  cclist_exclusion: Les addresses emails à exclure

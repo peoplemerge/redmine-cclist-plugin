@@ -1,0 +1,77 @@
+= CCList Plugin
+
+Checks the CC field of emails sent to redmine for non-members and loops them into discussions on that ticket
+
+==Author
+
+* Dave Thomas <opensource_-_AT_-_peoplemerge_-_DOT_-_com> <dthomas_-_AT_-_buzz-media_-_DOT_-_com>
+
+
+==Changelog
+
+For the complete changelog see the <tt>CHANGELOG</tt>-file in the Redmine CCList plugin directory.
+
+==Purpose
+
+At our company, we often have people open a ticket via email, and they CC a third party.  This occurs frequently with internal users (such as a line manager) who encounter a problem: and they open a ticket, CCing a customer or vendor who is affected.  In most cases, an organization can opt to use Redmine's feature to automatically create an account for emails that aren't recognized, and those are added as watchers.  For policy reasons I won't go into, we couldn't allow new accounts to be created; still, we really did want people without accounts who were CC'd on an email to be copied when the ticket was updated.
+
+The CCList plug-in solves that problem.  A UI element is added to the issue which shows and allows you to change the list of emails without accounts.  They are automatically added when people are looped in to a ticket being created or updated.  They get all updates thereafter.
+
+==Compatibility
+
+This plugin is compatible with Redmine 0.8.x.  I was obliged to subclass the Issue UI elements which required some (yuck) cut & paste programming, so when Issue changes, this plugin will probably break stuff.  As of this writing, compatibility with the current Redmine trunk is untested.
+
+==Obtaining 
+
+<i>URL of the GitHub repository: http://github.com/peoplemerge/redmine-cclist-plugin/tree/master</i>
+
+The source of this plugin can be "cloned" from the GitHub-repo using:
+
+<tt>$ cd {RAILS_ROOT}/vendor/plugins && git clone git@github.com:peoplemerge/redmine-cclist-plugin.git </tt>
+
+==Installation
+
+- Download the plugin from the available source (see http://www.redmine.org/wiki/redmine/PluginNewIssueAlerts#Obtaining)
+- Install the plugin as described at: http://www.redmine.org/wiki/redmine/Plugins (<b>this plugin does require a plugin database migration</b>)
+- Migrate your plugin database scheme using <tt>rake db:migrate_plugins RAILS_ENV="production"</tt>
+- Restart Redmine
+- Be sure Redmine is set to "do nothing" when it recieves an email From or CC someone who doesn't have an account.
+- Go to Administration...Enumerations..."Emails to exclude from sending" and enter all emails you have in procmail redmine.rc that forward to redmine.  
+
+==Usage
+
+With the plugin installed, *Don't forget* to add any email used to create a redmine ticket to "Emails to exclude from sending" as mentioned in the Installation section. Otherwise, if a user sends email to one project and CC's another, redmine will go on a rampage issuing responses to tickets to itself and everyone will get a barrage of thousands of emails a minute.
+
+Using the plugin is easy.  When Redmine gets an email with people that don't have accounts, it adds their email to a CC list.  Whenever the issue is updated (assuming the project set up to send an email when that occurs) these users will get CC'd and hence receive the update.  You can see who's being CC'd to an issue in the UI - the list appears below the "Watchers" section.  As you can guess, next to their email is a trashcan allowing you to remove the email from the CC list and similarly, you can click "Add" to manually add an email to the CC list, but you knew that already didn't you!
+
+==Bugs
+
+- Administration...Enumerations..."Emails to exclude from sending" form field may be too short.  If an email you're trying to add is greter than 25 characters (I _think_ it's 25 chars or so), the workaround is to go to the database directly.  The plugin looks in the table 'enumerations' for type 'EmailExclusion', which has a VARCHAR too short.  A db migration already exists in this project to extend it to 255 chars.
+- Administration...Enumerations..."Emails to exclude from sending" section occasionally vanished during testing, though I suspect it was a server in the load balancer that didn't get bounced with the new code.
+- If a user created a ticket but included other people in the "To" field, these sometimes don't get added, whereas people added via "Cc" always works.  I suspect it has something to do with Mailer.rb which is out of my hands.
+
+==Upgrading
+
+- Backup the currently deployed CCList plugin (<tt>cp -r /vendor/plugins/redmine_cclist /vendor/plugins/redmine_cclist-backup</tt>)
+- Update the plugin using <tt>git pull</tt>
+- Restart Redmine
+
+==Uninstalling
+
+- Remove the directory <i>"redmine_cclist"</i> from the plugin-directory <i>"../vendor/plugins"</i>
+- Restart Redmine
+
+==Licensing
+
+This plugin is open-source and licensed under the "GNU General Public License v2" (GPL, http://www.gnu.org/licenses/old-licenses/gpl-2.0.html). See the included <tt>GPL.txt</tt> and <tt>LICENSE.txt</tt> files for details.
+
+* (C) 2010 Dave Thomas
+
+==Support
+
+If you would like to report a bug or request a new feature you can open a new issue at the issue-tracking section of the plugins' GitHub site: http://github.com/peoplemerge/redmine-cclist-plugin/issues
+You can also post your feedback about the plugin in the dedicated plugin-section of the Redmine forums (http://www.redmine.org/projects/redmine/boards/3)
+
+As an alternative you can also join the <tt>#redmine</tt> channel on the "freenode IRC network" (http://freenode.net/irc_servers.shtml) to see if there is anyone who can provide some support.
+
+

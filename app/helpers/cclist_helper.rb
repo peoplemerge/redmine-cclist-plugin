@@ -1,0 +1,2 @@
+module CclistHelper
+end
